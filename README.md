@@ -8,14 +8,18 @@
 
 ### vcpkg
 
-'''
+```
+
     git clone https://github.com/Microsoft/vcpkg.git
     ./vcpkg/bootstrap-vcpkg.sh
     vcpkg install assimp glfw glm glad stb imgui implot
-'''
+
+```
 
 ## Build
 
-''' 
-    mkdir build && cd build && cmake .. && 
-'''
+```
+
+    mkdir build && cd build && cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake && cmake --build build
+
+```
