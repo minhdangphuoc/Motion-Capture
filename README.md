@@ -2,6 +2,6 @@
 
 ## Pre-develop setups
 
-- Add vcpkg, OpenGL, Assimp, GLFW, GLM, GLAD, STB, Imgui.
-
-##
+- Install vcpkg, OpenGL, Assimp, GLFW, GLM, GLAD, STB, Imgui, Cmake.
+- Setup 
+## 
