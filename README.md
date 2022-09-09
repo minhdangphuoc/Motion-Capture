@@ -12,7 +12,7 @@
 
     git clone https://github.com/Microsoft/vcpkg.git
     ./vcpkg/bootstrap-vcpkg.sh
-    vcpkg install assimp glfw glm glad stb imgui implot
+    vcpkg install assimp glfw3 glm glad stb imgui implot
 
 ```
 
