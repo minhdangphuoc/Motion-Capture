@@ -1,6 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 
 #include "Shader.h"
@@ -78,6 +82,18 @@ int main()
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		//transformation
+		glm::mat4 trans = glm::mat4(1.0f);
+		//rotate around screen center
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		//rotate around itself
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		trans = glm::scale(trans, static_cast<float>(sin(glfwGetTime())) * glm::vec3(0.5f, 0.5f, 0.5f));
+
+		unsigned int transformLoc = glGetUniformLocation(myShader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
 		myShader.use();
 		/*glBindVertexArray(VAO);
