@@ -10,7 +10,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
 
-add_executable(main src/main.cpp "src/Shader.h")
+add_executable(main src/main.cpp "src/Shader.h" "src/stb_image.h")
 
 target_link_libraries(main PRIVATE 
     glfw
