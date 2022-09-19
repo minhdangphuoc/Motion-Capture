@@ -168,7 +168,7 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader myShader("../../../src/shaders/shader.vertex", "../../../src/shaders/shader.fragment");
+	Shader myShader("../shaders/shader.vertex", "../shaders/shader.fragment");
 
 	unsigned int VBO, VAO;
 	glGenBuffers(1, &VBO);
@@ -198,7 +198,7 @@ int main()
 
 	int t_width, t_height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("../../../src/textures/stone.png", &t_width, &t_height, &nrChannels, 0);
+	unsigned char* data = stbi_load("../textures/stone.png", &t_width, &t_height, &nrChannels, 0);
 
 	if (data)
 	{
