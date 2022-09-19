@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20.0)
-project(Renderer)
+
+set(APP_NAME GLRenderer)
+project(${APP_NAME} VERSION 0.0.3)
 
 # VCPKG
 find_package(glfw3 CONFIG REQUIRED)
@@ -13,18 +15,22 @@ find_package(glm CONFIG REQUIRED)
 
 # MANUAL
 set(IMGUI_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/deps/imgui")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
+file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.c*)
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.c*)
+# COPY RESOURCE FILES
+file( COPY ${PROJECT_SOURCE_DIR}/resources 
+    DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
 
-add_executable(renderer ${SOURCES})
-
-target_link_libraries(renderer PRIVATE 
+target_link_libraries(${PROJECT_NAME} PRIVATE 
     glfw
     glad::glad
     glm::glm
     assimp::assimp
 )
-target_include_directories(renderer PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
     ${STB_INCLUDE_DIRS}
     ${IMGUI_INCLUDE_DIR}
 )

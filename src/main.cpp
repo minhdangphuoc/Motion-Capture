@@ -1,3 +1,13 @@
+////////////////////////////////////////////////////// DEBUG VARIABLES //////////////////////////////////////////////////////
+
+inline extern const auto MODE_ON = 1;
+inline extern const auto MODE_OFF = 0;
+
+#define SYSTEM_DEBUG MODE_ON
+#define WARNING_DEBUG MODE_ON
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -8,7 +18,6 @@
 #include <iostream>
 
 #include "Shader.h"
-
 #include "Utilities.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
