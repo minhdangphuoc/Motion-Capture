@@ -200,7 +200,7 @@ int main()
 
 	int t_width, t_height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("../textures/stone.png", &t_width, &t_height, &nrChannels, 0);
+	unsigned char* data = stbi_load((FileSystem::getPath("textures/stone.png")).c_str(), &t_width, &t_height, &nrChannels, 0);
 
 	if (data)
 	{
