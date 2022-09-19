@@ -9,6 +9,8 @@
 
 #include "Shader.h"
 
+#include "Utilities.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -168,7 +170,7 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader myShader("../shaders/shader.vertex", "../shaders/shader.fragment");
+	Shader myShader(FileSystem::getPath("shaders/shader.vertex"), FileSystem::getPath("shaders/shader.fragment"));
 
 	unsigned int VBO, VAO;
 	glGenBuffers(1, &VBO);

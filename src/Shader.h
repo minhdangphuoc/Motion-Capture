@@ -13,13 +13,13 @@ class Shader
 public:
 	unsigned int ID;
 
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader(const std::string & vertexPath, const std::string & fragmentPath);
 
 	void use();
 
 };
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const std::string & vertexPath, const std::string & fragmentPath)
 {
 	//retrieve source from file
 	std::string vertexCode, fragmentCode;
@@ -32,8 +32,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	try
 	{
 		//open files
-		vShaderFile.open(vertexPath);
-		fShaderFile.open(fragmentPath);
+		vShaderFile.open(vertexPath.c_str());
+		fShaderFile.open(fragmentPath.c_str());
 		std::stringstream vShaderStream, fShaderStream;
 		//read file's buffer content into streams
 		vShaderStream << vShaderFile.rdbuf();
