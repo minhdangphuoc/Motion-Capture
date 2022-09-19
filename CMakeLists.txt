@@ -7,8 +7,6 @@ find_package(assimp CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIRS "stb_image.h")
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-find_package(implot CONFIG REQUIRED)
 
 add_executable(main src/main.cpp "src/Shader.h" "src/stb_image.h")
 
@@ -17,9 +15,7 @@ target_link_libraries(main PRIVATE
     glad::glad
     glm::glm
     assimp::assimp
-    imgui::imgui
-    implot::implot
 )
 target_include_directories(main PRIVATE
-    {STB_INCLUDE_DIRS}
+    ${STB_INCLUDE_DIRS}
 )
