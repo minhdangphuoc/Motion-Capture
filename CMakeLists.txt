@@ -23,7 +23,9 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 # COPY RESOURCE FILES
 file( COPY ${PROJECT_SOURCE_DIR}/resources 
     DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
-
+file( COPY "${PROJECT_SOURCE_DIR}/imgui.ini"
+    DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
+    
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     glfw
     glad::glad
