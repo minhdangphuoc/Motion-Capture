@@ -1,6 +1,14 @@
 # OpenGL ES Renderer
 
 [[_TOC_]]
+
+## Version
+
+- [0.0.1] Basic triangle
+- [0.0.2] Depth Buffer and Camera system
+- [0.0.3] getPath system and Camera Class
+- [0.0.4] Imgui implement
+
 ## Pre-develop setups
 
 - Install vcpkg, OpenGL, Assimp, GLFW, GLM, GLAD, STB, Imgui, Cmake.
