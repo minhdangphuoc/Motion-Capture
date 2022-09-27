@@ -23,7 +23,9 @@ class GLRenderer
         bool init();
         void loadObjects();
         void loadShaders();
+        void loadFramebuffer();
         void loadTextures();
+
         void setProjection();
         void clean();
 
@@ -52,7 +54,8 @@ class GLRenderer
         double lastFrame = 0.0f;
         
     std::unique_ptr<Camera> camera;
-    
+    uint32_t framebuffer, textureColorbuffer, rbo, sWidth = 800, sHeight = 600;
+
     private:
         struct shaderDeleter
         {

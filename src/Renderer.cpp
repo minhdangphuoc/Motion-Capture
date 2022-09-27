@@ -17,6 +17,7 @@ bool GLRenderer::init()
     {
         loadShaders();
         loadTextures();
+        loadFramebuffer();
         loadObjects();
     }
     catch(const std::runtime_error& e)
@@ -98,7 +99,6 @@ void GLRenderer::loadObjects()
         1, 5, 6, 6, 2, 1 // top
     }));
 
-    glEnable(GL_DEPTH_TEST); // Z-Buffer
 
     for (auto i:Objects)
     {
@@ -137,6 +137,25 @@ void GLRenderer::loadObjects()
 
 }
 
+void GLRenderer::loadFramebuffer() 
+{
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    
+    glViewport(0, 0, sWidth, sHeight);
+
+    glGenTextures(1, &textureColorbuffer);
+    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, sWidth, sHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, sWidth, sHeight); // use a single renderbuffer object for both a depth AND stencil buffer.
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+}
+
 void GLRenderer::loadTextures()
 {
     textures.push_back(std::make_unique<Texture>(FileSystem::getPath("textures/stone.png")));
@@ -151,7 +170,7 @@ void GLRenderer::loadTextures()
 
 void GLRenderer::setProjection()
 {
-    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)800.f/ (float)600.f  , 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)sWidth/ (float)sHeight , 0.1f, 100.0f);
     ourShader->setMat4("projection", projection);
 }
 
@@ -163,6 +182,9 @@ void GLRenderer::setCamera(Camera * newCamera)
 
 void GLRenderer::draw() 
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glEnable(GL_DEPTH_TEST); // Z-Buffer
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -194,4 +216,9 @@ void GLRenderer::draw()
     
     glDrawArrays(GL_TRIANGLES, 0, 36);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f); 
+    glClear(GL_COLOR_BUFFER_BIT);
 }

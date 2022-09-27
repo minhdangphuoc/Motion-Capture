@@ -51,6 +51,8 @@ public:
     void createCheckbox(std::string label, bool* value);
     void createInputTextBox(std::string label,char* buf, size_t buf_size);
 
+    void createImageView(const std::string & title, const uint32_t & buffer, uint32_t * width, uint32_t * height);
+
     void createMenuBar();
     void createMenu(std::string title);
     void addMenuItem(std::string title, bool* showItem);

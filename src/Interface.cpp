@@ -1,4 +1,5 @@
 #include "Interface.hpp"
+#include <iostream>
 
 void Interface::init(const std::string & glsl_version, GLFWwindow * window)
 {
@@ -152,4 +153,13 @@ void Interface::endMenu()
 void Interface::endMenuBar()
 {
     ImGui::EndMenuBar();
+}
+
+void Interface::createImageView(const std::string & title, const uint32_t & buffer, uint32_t * width, uint32_t * height)
+{   
+    ImGui::BeginChild(title.c_str());
+    *width = ImGui::GetWindowSize().x;
+    *height = ImGui::GetWindowSize().y;
+    ImGui::Image((ImTextureID)buffer, ImVec2(*width, *height), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::EndChild();
 }

@@ -154,6 +154,9 @@ void Window::render(GLRenderer *renderer, Interface *interface)
 
             interface->endWindow();
 
+            interface->beginWindow("Scene");
+            interface->createImageView("Renderer", renderer->textureColorbuffer, &renderer->sWidth, &renderer->sHeight);
+            interface->endWindow();
 
             interface->beginWindow("Frame");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
