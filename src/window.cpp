@@ -117,43 +117,65 @@ void Window::render(GLRenderer *renderer, Interface *interface)
         glfwPollEvents();   
         
         
-        interface->start();
+            interface->start();
 
-        interface->beginWindow("Model");
-        interface->createText("Hold ALT to move camera");
-        interface->createText("Translate");
-        interface->createSlider("X", renderer->x, -5.0f, 5.0f);
-        interface->createSlider("Y", renderer->y, -5.0f, 5.0f);
-        interface->createSlider("Z", renderer->z, -5.0f, 5.0f);
-        interface->createText("Rotate");
-        interface->createSlider("RotX", renderer->rotX, .0f, 360.0f);
-        interface->createSlider("RotY", renderer->rotY, .0f, 360.0f);
-        interface->createSlider("RotZ", renderer->rotZ, .0f, 360.0f);
-        interface->endWindow();
+            interface->beginWindow("Model");
+            interface->createText("Hold ALT to move camera");
+            interface->createText("Translate");
+            interface->createFloatSlider("X", renderer->x, -5.0f, 5.0f);
+            interface->createFloatSlider("Y", renderer->y, -5.0f, 5.0f);
+            interface->createFloatSlider("Z", renderer->z, -5.0f, 5.0f);
+            interface->createText("Rotate");
+            interface->createFloatSlider("RotX", renderer->rotX, .0f, 360.0f);
+            interface->createFloatSlider("RotY", renderer->rotY, .0f, 360.0f);
+            interface->createFloatSlider("RotZ", renderer->rotZ, .0f, 360.0f);
+            interface->endWindow();
+
+            interface->beginWindow("Test");
+            interface->createColorText(ImVec4(1,1,0,1), "Hi");
+            interface->createButton("Click");
+            static bool check = false;
+            interface->createCheckbox("Check", &check);
+            static float my_color[4] = { 1.0f,1.0f,1.0f,1.0f };
+            interface->createColorEdit4("Color edit", my_color);
+            static char input[100] = "";
+            interface->createInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
+
+            static bool selectItem = false;
+            if (ImGui::BeginMenuBar())
+            {
+                if (ImGui::BeginMenu("My menu"))
+                {
+                    ImGui::MenuItem("My Item", NULL, &selectItem);
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMenuBar();
+            }
+
+            interface->endWindow();
 
 
+            interface->beginWindow("Frame");
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            if (max_values + 1 >= 1000)
+            {
+                fps.erase(fps.begin());
+            } else 
+            {
+                max_values++;
+                time.push_back(max_values);
+            }
+            fps.push_back(ImGui::GetIO().Framerate);
 
-        interface->beginWindow("Frame");
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        if (max_values + 1 >= 1000)
-        {
-            fps.erase(fps.begin());
-        } else 
-        {
-            max_values++;
-            time.push_back(max_values);
-        }
-        fps.push_back(ImGui::GetIO().Framerate);
-
-        interface->createPlotLine("fps", time, fps, max_values);
+            interface->createPlotLine("fps", time, fps, max_values);
             
-        interface->endWindow();
+            interface->endWindow();
 
-        interface->render();
+            interface->render();
 
-        renderer->draw();
+            renderer->draw();
         
-        interface->renderDrawData();
+            interface->renderDrawData();
         
         glfwSwapBuffers(window.get());
     }

@@ -40,9 +40,22 @@ public:
 
     // Component
     void createText(std::string title);
-    void createSlider(std::string title, float &f, const float min, const float max);
+    void createColorText(ImVec4 color, std::string title);
+    void createFloatSlider(std::string title, float &f, const float min, const float max);
+    void createIntSlider(std::string title, int &f, const int min, const int max);
     void createPlotLine(std::string title, std::vector<float> & x_data, std::vector<float> & y_data, int size);
+    void createPlotBar(std::string title, std::vector<float>& bar_data, int size);
     void createColorEdit3(std::string title, float * color);
+    void createColorEdit4(std::string title, float * color);
+    void createButton(std::string title);
+    void createCheckbox(std::string label, bool* value);
+    void createInputTextBox(std::string label,char* buf, size_t buf_size);
+
+    void createMenuBar();
+    void createMenu(std::string title);
+    void addMenuItem(std::string title, bool* showItem);
+    void endMenu();
+    void endMenuBar();
     
 };
 
