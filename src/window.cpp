@@ -132,6 +132,18 @@ void Window::render(GLRenderer *renderer, Interface *interface)
             interface->endWindow();
 
             interface->beginWindow("Test");
+
+            if (ImGui::BeginMenu("File"))
+            {
+                bool item_selected = false;
+                bool item_enabled = true;
+                if (ImGui::MenuItem("New", "", item_selected, item_enabled))
+                {
+                    //Do something
+                }
+                ImGui::EndMenu();
+            }
+
             interface->createColorText(ImVec4(1,1,0,1), "Hi");
             interface->createButton("Click");
             static bool check = false;
@@ -140,17 +152,6 @@ void Window::render(GLRenderer *renderer, Interface *interface)
             interface->createColorEdit4("Color edit", my_color);
             static char input[100] = "";
             interface->createInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
-
-            static bool selectItem = false;
-            if (ImGui::BeginMenuBar())
-            {
-                if (ImGui::BeginMenu("My menu"))
-                {
-                    ImGui::MenuItem("My Item", NULL, &selectItem);
-                    ImGui::EndMenu();
-                }
-                ImGui::EndMenuBar();
-            }
 
             interface->endWindow();
 
