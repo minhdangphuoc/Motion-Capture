@@ -130,6 +130,12 @@ void Interface::createInputTextBox(const std::string title,char* buf, size_t buf
     ImGui::InputText(title.c_str(), buf, buf_size);
 }
 
+void Interface::createMultilineInputTextBox(const std::string title, char* buf, size_t buf_size)
+{
+    ImGui::InputTextMultiline(title.c_str(), buf, buf_size);
+}
+
+
 void Interface::createMenuBar()
 {
     ImGui::BeginMenuBar();

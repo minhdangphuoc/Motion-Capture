@@ -151,7 +151,7 @@ void Window::render(GLRenderer *renderer, Interface *interface)
             static float my_color[4] = { 1.0f,1.0f,1.0f,1.0f };
             interface->createColorEdit4("Color edit", my_color);
             static char input[100] = "";
-            interface->createInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
+            interface->createMultilineInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
 
             interface->endWindow();
 
