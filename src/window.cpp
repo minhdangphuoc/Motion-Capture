@@ -150,6 +150,10 @@ void Window::render(GLRenderer *renderer, Interface *interface)
             interface->createCheckbox("Check", &check);
             static float my_color[4] = { 1.0f,1.0f,1.0f,1.0f };
             interface->createColorEdit4("Color edit", my_color);
+            Texture texture = Texture(FileSystem::getPath("textures/wood.png"));
+            uint32_t myTexture = 0;
+            myTexture = texture.getTexture();
+            interface->drawImage(myTexture, 200,200);
             static char input[100] = "";
             interface->createMultilineInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
 

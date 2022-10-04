@@ -135,6 +135,10 @@ void Interface::createMultilineInputTextBox(const std::string title, char* buf, 
     ImGui::InputTextMultiline(title.c_str(), buf, buf_size);
 }
 
+void Interface::drawImage(uint32_t texture, float width, float height) {
+    ImGui::Image((void*)(intptr_t)texture, ImVec2(width, height));
+}
+
 
 void Interface::createMenuBar()
 {

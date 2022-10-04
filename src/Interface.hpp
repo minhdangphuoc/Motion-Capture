@@ -51,6 +51,7 @@ public:
     void createCheckbox(std::string label, bool* value);
     void createInputTextBox(std::string label,char* buf, size_t buf_size);
     void createMultilineInputTextBox(std::string label, char* buf, size_t buf_size);
+    void drawImage(uint32_t texture, float width, float height);
 
     void createImageView(const std::string & title, const uint32_t & buffer, uint32_t * width, uint32_t * height);
 
