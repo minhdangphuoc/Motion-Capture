@@ -102,10 +102,12 @@ bool Window::GLADInit()
     return true;
 }
 
+
 void Window::render(GLRenderer *renderer, Interface *interface)
 {
     std::vector<float> fps, time;
     int max_values = 0;
+    Texture texture = Texture(FileSystem::getPath("textures/wood.png"));
 
     while(!glfwWindowShouldClose(window.get()))
     {
@@ -117,43 +119,71 @@ void Window::render(GLRenderer *renderer, Interface *interface)
         glfwPollEvents();   
         
         
-        interface->start();
+            interface->start();
 
-        interface->beginWindow("Model");
-        interface->createText("Hold ALT to move camera");
-        interface->createText("Translate");
-        interface->createSlider("X", renderer->x, -5.0f, 5.0f);
-        interface->createSlider("Y", renderer->y, -5.0f, 5.0f);
-        interface->createSlider("Z", renderer->z, -5.0f, 5.0f);
-        interface->createText("Rotate");
-        interface->createSlider("RotX", renderer->rotX, .0f, 360.0f);
-        interface->createSlider("RotY", renderer->rotY, .0f, 360.0f);
-        interface->createSlider("RotZ", renderer->rotZ, .0f, 360.0f);
-        interface->endWindow();
+            interface->beginWindow("Model");
+            interface->createText("Hold ALT to move camera");
+            interface->createText("Translate");
+            interface->createFloatSlider("X", renderer->x, -5.0f, 5.0f);
+            interface->createFloatSlider("Y", renderer->y, -5.0f, 5.0f);
+            interface->createFloatSlider("Z", renderer->z, -5.0f, 5.0f);
+            interface->createText("Rotate");
+            interface->createFloatSlider("RotX", renderer->rotX, .0f, 360.0f);
+            interface->createFloatSlider("RotY", renderer->rotY, .0f, 360.0f);
+            interface->createFloatSlider("RotZ", renderer->rotZ, .0f, 360.0f);
+            interface->endWindow();
 
+            interface->beginWindow("Test");
 
+            if (ImGui::BeginMenu("File"))
+            {
+                bool item_selected = false;
+                bool item_enabled = true;
+                if (ImGui::MenuItem("New", "", item_selected, item_enabled))
+                {
+                    //Do something
+                }
+                ImGui::EndMenu();
+            }
 
-        interface->beginWindow("Frame");
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        if (max_values + 1 >= 1000)
-        {
-            fps.erase(fps.begin());
-        } else 
-        {
-            max_values++;
-            time.push_back(max_values);
-        }
-        fps.push_back(ImGui::GetIO().Framerate);
+            interface->createColorText(ImVec4(1,1,0,1), "Hi");
+            interface->createButton("Click");
+            static bool check = false;
+            interface->createCheckbox("Check", &check);
+            static float my_color[4] = { 1.0f,1.0f,1.0f,1.0f };
+            interface->createColorEdit4("Color edit", my_color);
 
-        interface->createPlotLine("fps", time, fps, max_values);
+            interface->drawImage(texture.getTexture(), 200,200);
+            static char input[100] = "";
+            interface->createMultilineInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
+
+            interface->endWindow();
+
+            interface->beginWindow("Scene");
+            interface->createImageView("Renderer", renderer->textureColorbuffer, &renderer->sWidth, &renderer->sHeight);
+            interface->endWindow();
+
+            interface->beginWindow("Frame");
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            if (max_values + 1 >= 1000)
+            {
+                fps.erase(fps.begin());
+            } else 
+            {
+                max_values++;
+                time.push_back(max_values);
+            }
+            fps.push_back(ImGui::GetIO().Framerate);
+
+            interface->createPlotLine("fps", time, fps, max_values);
             
-        interface->endWindow();
+            interface->endWindow();
 
-        interface->render();
+            interface->render();
 
-        renderer->draw();
+            renderer->draw();
         
-        interface->renderDrawData();
+            interface->renderDrawData();
         
         glfwSwapBuffers(window.get());
     }
