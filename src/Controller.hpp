@@ -7,7 +7,6 @@
 #include <memory>
 
 #include "CameraSystem.hpp"
-#include "Renderer.hpp"
 
 
 class Controller
@@ -16,7 +15,7 @@ public:
     Controller() = default;
     ~Controller() = default;
 
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    // static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     bool firstMouse = true;
     float lastX;
     float lastY;

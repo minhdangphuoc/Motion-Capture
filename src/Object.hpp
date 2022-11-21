@@ -1,19 +1,21 @@
-#include <cstdint> 
-#include <vector>
+#ifndef OBJECT_HPP
+#define OBJECT_HPP
 
-class Object
+#include "Material.hpp"
+#include "Shader.hpp"
+// Object interface
+class Object 
 {
 public:
-    Object(std::vector<float>  vertices, std::vector<uint32_t> indices): vertices(vertices), indices(indices){};
-    Object(std::vector<float>  vertices) : vertices(vertices) {};
+    Object() = default;
+    ~Object() = default;
+    virtual void draw(Shader *shader) = 0;
+    virtual void clean() = 0;
+    virtual void setMaterial(const Material & newaterial) = 0;
+    unsigned int selectedMaterial = 0;
+    glm::mat4 model; // Remove this in future -> init and deleted when drawing object
+protected:
     
-    ~Object() {};
-    uint32_t VBO, VAO, EBO;
-    std::vector<float> vertices;
-    std::vector<uint32_t> indices;
-
-    // getters
-    
-private:
-
 };
+
+#endif // !OBJECT_HPP

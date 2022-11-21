@@ -15,8 +15,8 @@ bool GLRenderer::init()
 {
     try
     {
+        initMaterial();
         loadShaders();
-        loadTextures();
         loadFramebuffer();
         loadObjects();
     }
@@ -30,111 +30,52 @@ bool GLRenderer::init()
 
 void GLRenderer::clean()
 {   
-    for (auto i: Objects)
+    for (auto &it : Objects)
     {
-        glDeleteVertexArrays(1, &(VAO));
-        glDeleteBuffers(1, &(VBO));
-        glDeleteBuffers(1, &(EBO));
+        it.second->clean();
     }
-    
+}
+
+bool GLRenderer::initMaterial()
+{
+    MaterialPresets.insert(std::pair("custom", Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f), glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 100.f)));
+    MaterialPresets.insert(std::pair("emerald", Material(glm::vec3(0.0215f, 0.1745f, 0.0215f), glm::vec3(0.07568f, 0.61424f, 0.07568f), glm::vec3(0.633f, 0.727811f, 0.633f), 0.6f * 100.f)));
+    MaterialPresets.insert(std::pair("jade", Material(glm::vec3(0.135f, 0.2225f, 0.1575f), glm::vec3(0.54f, 0.89f, 0.63f), glm::vec3(0.316228f, 0.316228f, 0.316228f), 0.1f * 100.f)));
+    MaterialPresets.insert(std::pair("obsidian", Material(glm::vec3(0.05375f, 0.05f, 0.06625f), glm::vec3(0.18275f, 0.17f, 0.22525f), glm::vec3(0.332741f, 0.328634f, 0.346435f), 0.3f * 100.f)));
+    MaterialPresets.insert(std::pair("pearl", Material(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 0.088f * 100.f)));
+    MaterialPresets.insert(std::pair("ruby", Material(glm::vec3(0.1745f, 0.01175f, 0.01175f), glm::vec3(0.61424f, 0.04136f, 0.04136f), glm::vec3(0.727811f, 0.626959f, 0.626959f), 0.6f * 100.f)));
+    MaterialPresets.insert(std::pair("turquoise", Material(glm::vec3(0.1f, 0.18725f, 0.1745f), glm::vec3(0.396f, 0.74151f, 0.69102f), glm::vec3(0.297254f, 0.30829f, 0.306678f), 0.1f * 100.f)));
+    MaterialPresets.insert(std::pair("brass", Material(glm::vec3(0.329412f, 0.223529f, 0.027451f), glm::vec3(0.780392f, 0.568627f, 0.113725f), glm::vec3(0.992157f, 0.941176f, 0.807843f), 0.21794872f * 100.f)));
+    MaterialPresets.insert(std::pair("bronze", Material(glm::vec3(0.2125f, 0.1275f, 0.054f), glm::vec3(0.714f, 0.4284f, 0.18144f), glm::vec3(0.393548f, 0.271906f, 0.166721f), 0.2f * 100.f)));
+    MaterialPresets.insert(std::pair("chrome", Material(glm::vec3(0.25f, 0.25f, 0.25f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.774597f, 0.774597f, 0.774597f), 0.6f * 100.f)));
+    MaterialPresets.insert(std::pair("copper", Material(glm::vec3(0.19125f, 0.0735f, 0.0225f), glm::vec3(0.7038f, 0.27048f, 0.0828f), glm::vec3(0.256777f, 0.137622f, 0.086014f), 0.1f * 100.f)));
+    MaterialPresets.insert(std::pair("gold", Material(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(0.628281f, 0.555802f, 0.366065f), 0.4f * 100.f)));
+    MaterialPresets.insert(std::pair("silver", Material(glm::vec3(0.19225f, 0.19225f, 0.19225f), glm::vec3(0.50754f, 0.50754f, 0.50754f), glm::vec3(0.508273f, 0.508273f, 0.508273f), 0.4f * 100.f)));
+    MaterialPresets.insert(std::pair("black plastic", Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("cyan plastic", Material(glm::vec3(0.0f, 0.1f, 0.06f), glm::vec3(0.0f, 0.50980392f, 0.50980392f), glm::vec3(0.50196078f, 0.50196078f, 0.50196078f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("green plastic", Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.35f, 0.1f), glm::vec3(0.45f, 0.55f, 0.45f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("red plastic", Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("white plastic", Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.55f, 0.55f, 0.55f), glm::vec3(0.7f, 0.7f, 0.7f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("yellow plastic", Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.6f, 0.6f, 0.5f), 0.25f * 100.f)));
+    MaterialPresets.insert(std::pair("black rubber", Material(glm::vec3(0.02f, 0.02f, 0.02f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.4f, 0.4f, 0.4f), 0.078125f * 100.f)));
+    MaterialPresets.insert(std::pair("cyan rubber", Material(glm::vec3(0.0f, 0.05f, 0.05f), glm::vec3(0.4f, 0.5f, 0.5f), glm::vec3(0.04f, 0.7f, 0.7f), 0.078125f * 100.f)));
+    MaterialPresets.insert(std::pair("green rubber", Material(glm::vec3(0.0f, 0.05f, 0.0f), glm::vec3(0.4f, 0.5f, 0.4f), glm::vec3(0.04f, 0.7f, 0.04f), 0.078125f * 100.f)));
+    MaterialPresets.insert(std::pair("red rubber", Material(glm::vec3(0.05f, 0.0f, 0.0f), glm::vec3(0.5f, 0.4f, 0.4f), glm::vec3(0.7f, 0.04f, 0.04f), 0.078125f * 100.f)));
+    MaterialPresets.insert(std::pair("white rubber", Material(glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.7f, 0.7f, 0.7f), 0.078125f * 100.f)));
+    MaterialPresets.insert(std::pair("yellow rubber", Material(glm::vec3(0.05f, 0.05f, 0.0f), glm::vec3(0.5f, 0.5f, 0.4f), glm::vec3(0.7f, 0.7f, 0.04f), 0.078125f * 100.f)));
+
+    return true;
 }
 
 void GLRenderer::loadShaders()
 {
-    ourShader.reset(new Shader(FileSystem::getPath("shaders/shader.vert"), FileSystem::getPath("shaders/shader.frag")));
+    shaders.insert(std::pair("shader", std::make_unique<Shader>(FileSystem::getPath("shaders/model.vert"), FileSystem::getPath("shaders/model.frag"))));
 }
 
 void GLRenderer::loadObjects()
 {
-    Objects.push_back(Object({
-        // positions          // texture coords
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    }, 
-    {  
-        0, 1, 2, 2, 3, 0, // front
-        0, 4, 5, 5, 1, 0, // right
-        4, 7, 6, 6, 5, 4, // back
-        7, 3, 2, 2, 6, 7, // left
-        0, 3, 7, 7, 4, 0, // bottom
-        1, 5, 6, 6, 2, 1 // top
-    }));
-
-
-    for (auto i:Objects)
-    {
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-    }
-
-    for (auto i:Objects)
-    {
-        // bind the Vertex Array Object - VAO
-        glBindVertexArray(VAO);
-
-        // bind and set vertex buffer(s) - VBO
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // Note: "Add i.vertices.size()" * sizeof(GLfloat) when using vector.
-        glBufferData(GL_ARRAY_BUFFER, i.vertices.size() * sizeof(GLfloat), (i.vertices.data()), GL_STATIC_DRAW);
-
-        // Index Buffer
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, i.indices.size() * sizeof(uint32_t), (i.indices.data()), GL_STATIC_DRAW);
-
-        // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        // texture coord attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-    }
-
-
-    // draw in wireframe polygons
-    #if POLYGON_MODE
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    #endif // POLYGON_MODE
-
+    glEnable(GL_DEPTH_TEST); // Z-Buffer
+    Objects.insert(std::pair("Model", std::make_unique<Model>(FileSystem::getPath("models/Duck/glTF/Duck.gltf"))));
 }
 
 void GLRenderer::loadFramebuffer() 
@@ -156,22 +97,10 @@ void GLRenderer::loadFramebuffer()
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 }
 
-void GLRenderer::loadTextures()
-{
-    textures.push_back(std::make_unique<Texture>(FileSystem::getPath("textures/stone.png")));
-    
-    ourShader->use();
-
-    for (int i = 0; i < textures.size(); i++)
-    {
-        ourShader->setInt("texture"+std::to_string(i), i);
-    }
-}
-
 void GLRenderer::setProjection()
 {
     glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)sWidth/ (float)sHeight , 0.1f, 100.0f);
-    ourShader->setMat4("projection", projection);
+    shaders.at("shader")->setMat4("projection", projection);
 }
 
 void GLRenderer::setCamera(Camera * newCamera)
@@ -188,34 +117,25 @@ void GLRenderer::draw()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (int i = 0; i < textures.size(); i++)
-    {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, textures[i]->getTexture());
-    }
-    
-    ourShader->use();
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    shaders.at("shader")->use();
     
     setProjection();
 
     // camera/view transformat  ion
     glm::mat4 view = camera->GetViewMatrix();
-    ourShader->setMat4("view", view);
+    shaders.at("shader")->setMat4("view", view);
 
-
-    glBindVertexArray(VAO);
-    
     // Render Box
-    glm::mat4 model = glm::mat4(1.0f); 
-    model = glm::translate(model, glm::vec3(x, y, z));
-    model = glm::rotate(model, glm::radians(rotX), glm::vec3(1.f, 0, 0));
-    model = glm::rotate(model, glm::radians(rotY), glm::vec3(0, 1.f, 0));
-    model = glm::rotate(model, glm::radians(rotZ), glm::vec3(0, 0, 1.f));
-    ourShader->setMat4("model", model);
+    Objects.at("Model")->model = glm::mat4(1.0f); 
+    Objects.at("Model")->model = glm::translate(Objects.at("Model")->model, glm::vec3(x, y, z));
+    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotX), glm::vec3(1.f, 0, 0));
+    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotY), glm::vec3(0, 1.f, 0));
+    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotZ), glm::vec3(0, 0, 1.f));
+    Objects.at("Model")->model = glm::scale(Objects.at("Model")->model, glm::vec3(0.01f));
+    Objects.at("Model")->draw(shaders.at("shader").get());
     
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);

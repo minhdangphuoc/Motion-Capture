@@ -83,7 +83,7 @@ bool Window::windowInit(Interface *interface)
 
     glfwMakeContextCurrent(window.get());
     interface->init("#version 410", window.get());
-    glfwSetFramebufferSizeCallback(window.get(), HWInput->framebuffer_size_callback); 
+    // glfwSetFramebufferSizeCallback(window.get(), HWInput->framebuffer_size_callback); 
     return true;
 }
 
@@ -107,7 +107,7 @@ void Window::render(GLRenderer *renderer, Interface *interface)
 {
     std::vector<float> fps, time;
     int max_values = 0;
-    Texture texture = Texture(FileSystem::getPath("textures/wood.png"));
+    // Texture texture = Texture(FileSystem::getPath("textures/wood.png"));
 
     while(!glfwWindowShouldClose(window.get()))
     {
@@ -153,7 +153,7 @@ void Window::render(GLRenderer *renderer, Interface *interface)
             static float my_color[4] = { 1.0f,1.0f,1.0f,1.0f };
             interface->createColorEdit4("Color edit", my_color);
 
-            interface->drawImage(texture.getTexture(), 200,200);
+            // interface->drawImage(texture.getTexture(), 200,200);
             static char input[100] = "";
             interface->createMultilineInputTextBox("Input Text", input, IM_ARRAYSIZE(input));
 
@@ -165,17 +165,17 @@ void Window::render(GLRenderer *renderer, Interface *interface)
 
             interface->beginWindow("Frame");
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            if (max_values + 1 >= 1000)
-            {
-                fps.erase(fps.begin());
-            } else 
-            {
-                max_values++;
-                time.push_back(max_values);
-            }
-            fps.push_back(ImGui::GetIO().Framerate);
+            // if (max_values + 1 >= 1000)
+            // {
+            //     fps.erase(fps.begin());
+            // } else 
+            // {
+            //     max_values++;
+            //     time.push_back(max_values);
+            // }
+            // fps.push_back(ImGui::GetIO().Framerate);
 
-            interface->createPlotLine("fps", time, fps, max_values);
+            // interface->createPlotLine("fps", time, fps, max_values);
             
             interface->endWindow();
 

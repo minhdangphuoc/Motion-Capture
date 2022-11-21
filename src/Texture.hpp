@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __TEXTURE_HPP__
-#define __TEXTURE_HPP__
+#ifndef TEXTURE_HPP
+#define TEXTURE_HPP
 
 #include <iostream>
 #include <cstdint> 
@@ -10,12 +10,12 @@
 class Texture
 {
 private:
-    uint32_t texture;
 public:
-    Texture(std::string path);
-    ~Texture() = default;
+    uint32_t id;
+    std::string type;
+    std::string path;
 
-    uint32_t getTexture() {return texture;}
+    uint32_t getTexture() {return id;}
 };
 
 #endif // __TEXTURE_HPP__
