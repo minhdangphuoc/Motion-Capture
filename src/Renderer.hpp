@@ -6,12 +6,18 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "CameraSystem.hpp"
+#include "Material.hpp"
+#include "Model.hpp"
+#include "Shape.hpp"
+
 
 #include <vector>
 #include <cstdlib>
 #include <cstdint> 
 #include <string> 
 #include <array>
+#include <unordered_map>
+#include <map>
 #include <memory>
 
 
@@ -25,6 +31,7 @@ class GLRenderer
         void loadShaders();
         void loadFramebuffer();
         void loadTextures();
+        bool initMaterial();
 
         void setProjection();
         void clean();
@@ -55,6 +62,8 @@ class GLRenderer
         
     std::unique_ptr<Camera> camera;
     uint32_t framebuffer, textureColorbuffer, rbo, sWidth = 800, sHeight = 600;
+    std::unordered_map<std::string /* title */, std::unique_ptr<Object>> Objects;
+    std::map<std::string, Material> MaterialPresets;
 
     private:
         struct shaderDeleter
@@ -72,10 +81,9 @@ class GLRenderer
     uint32_t VAO, VBO, EBO, texture;
 
 
-    std::vector<Object> Objects;
     std::string errorInfo;
-    std::unique_ptr<Shader, shaderDeleter> ourShader;
     std::vector<std::unique_ptr<Texture>> textures;
+    std::unordered_map<std::string /* title */, std::unique_ptr<Shader>> shaders;
 
 };
 #endif // GL_RENDERER_HPP

@@ -86,7 +86,7 @@ void Interface::createIntSlider(std::string title, int& f, const int min, const 
 
 void Interface::createPlotLine(std::string title, std::vector<float> & x_data, std::vector<float> & y_data, int size)
 {
-    ImPlot::BeginPlot("FPS Line Chart", ImVec2(320.f, 160.f), ImPlotFlags_NoTitle);
+    ImPlot::BeginPlot(title.c_str(), ImVec2(320.f, 160.f), ImPlotFlags_NoTitle);
     ImPlot::SetupAxis(ImAxis_X1, "", ImPlotAxisFlags_AutoFit + ImPlotAxisFlags_NoTickLabels);
     ImPlot::SetupAxis(ImAxis_Y1, "", ImPlotAxisFlags_AutoFit);
     ImPlot::SetupFinish();
