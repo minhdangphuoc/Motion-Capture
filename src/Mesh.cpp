@@ -18,6 +18,8 @@ void Mesh::cleanData() {
 // render the mesh
 void Mesh::draw(Shader *shader) 
 {
+    shader->setBool("hasTexture", true);
+    
     // bind appropriate textures
     unsigned int diffuseNr  = 1;
     unsigned int specularNr = 1;

@@ -9,7 +9,9 @@
 #include "Material.hpp"
 #include "Model.hpp"
 #include "Shape.hpp"
-
+#include "LightingSystem.hpp"
+#include "Animation.hpp"
+#include "Animator.hpp"
 
 #include <vector>
 #include <cstdlib>
@@ -84,6 +86,9 @@ class GLRenderer
     std::string errorInfo;
     std::vector<std::unique_ptr<Texture>> textures;
     std::unordered_map<std::string /* title */, std::unique_ptr<Shader>> shaders;
-
+    std::unique_ptr<LightingSystem> lightingSystem = std::make_unique<LightingSystem>();
+    
+    Animation *animation;
+    Animator *animator;
 };
 #endif // GL_RENDERER_HPP

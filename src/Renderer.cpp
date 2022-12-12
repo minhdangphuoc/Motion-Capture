@@ -69,13 +69,50 @@ bool GLRenderer::initMaterial()
 
 void GLRenderer::loadShaders()
 {
-    shaders.insert(std::pair("shader", std::make_unique<Shader>(FileSystem::getPath("shaders/model.vert"), FileSystem::getPath("shaders/model.frag"))));
+    shaders.insert(std::pair("model", std::make_unique<Shader>(FileSystem::getPath("shaders/model.vert"), FileSystem::getPath("shaders/model.frag"))));
+    shaders.insert(std::pair("lighting", std::make_unique<Shader>(FileSystem::getPath("shaders/light.vert"), FileSystem::getPath("shaders/light.frag"))));
+    
 }
 
 void GLRenderer::loadObjects()
 {
     glEnable(GL_DEPTH_TEST); // Z-Buffer
-    Objects.insert(std::pair("Model", std::make_unique<Model>(FileSystem::getPath("models/Duck/glTF/Duck.gltf"))));
+    Objects.insert(std::pair("Model1", std::make_unique<Model>(FileSystem::getPath("models/Sponza/glTF/Sponza.gltf"))));
+    
+    std::string str = FileSystem::getPath("models/TestAniModel/Standing Run Forward.dae");
+    Objects.insert(std::pair("Model2", std::make_unique<Model>(str)));
+    animation = new Animation(str, static_cast<Model *>(Objects.at("Model2").get()));
+    animator = new Animator(animation);
+
+    lightingSystem->setNewPointLight("PL1",
+                                     new PointLight(
+                                         glm::vec3(0.f, 5.f, 0.f),
+                                         glm::vec3(0.0f, 0.5f, 0.0f),
+                                         glm::vec3(0.f, 0.7f, 0.f),
+                                         glm::vec3(0.5f, 0.5f, 0.5f),
+                                         1.0f,
+                                         0.14,
+                                         0.07));
+    lightingSystem->setNewPointLight("PL2",
+                                     new PointLight(
+                                         glm::vec3(-1.f, 1.f, 0.f),
+                                         glm::vec3(0.0f, 0.f, 0.5f),
+                                         glm::vec3(0.f, 0.f, 0.7f),
+                                         glm::vec3(0.5f, 0.5f, 0.5f),
+                                         1.0f,
+                                         0.14,
+                                         0.07));
+    lightingSystem->setNewSpotLight("SL1", new SpotLight(
+                                               glm::vec3(0.f, 3.f, 0.f),
+                                               glm::vec3(0.f, -1.f, 0.f),
+                                               glm::vec3(0.0f, 0.f, 0.f),
+                                               glm::vec3(1.f),
+                                               glm::vec3(1.f),
+                                               1.0f,
+                                               0.09,
+                                               0.032,
+                                               glm::cos(glm::radians(10.0f)),
+                                               glm::cos(glm::radians(15.0f))));
 }
 
 void GLRenderer::loadFramebuffer() 
@@ -99,8 +136,8 @@ void GLRenderer::loadFramebuffer()
 
 void GLRenderer::setProjection()
 {
-    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)sWidth/ (float)sHeight , 0.1f, 100.0f);
-    shaders.at("shader")->setMat4("projection", projection);
+    // glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)sWidth/ (float)sHeight , 0.1f, 100.0f);
+    // shaders.at("shader")->setMat4("projection", projection);
 }
 
 void GLRenderer::setCamera(Camera * newCamera)
@@ -116,27 +153,57 @@ void GLRenderer::draw()
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    shaders.at("shader")->use();
     
-    setProjection();
-
-    // camera/view transformat  ion
+    animator->UpdateAnimation(deltaTime);
+    
+    // view/projection transformations
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)sWidth/ (float)sHeight , 0.1f, 100.0f);
     glm::mat4 view = camera->GetViewMatrix();
-    shaders.at("shader")->setMat4("view", view);
 
-    // Render Box
-    Objects.at("Model")->model = glm::mat4(1.0f); 
-    Objects.at("Model")->model = glm::translate(Objects.at("Model")->model, glm::vec3(x, y, z));
-    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotX), glm::vec3(1.f, 0, 0));
-    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotY), glm::vec3(0, 1.f, 0));
-    Objects.at("Model")->model = glm::rotate(Objects.at("Model")->model, glm::radians(rotZ), glm::vec3(0, 0, 1.f));
-    Objects.at("Model")->model = glm::scale(Objects.at("Model")->model, glm::vec3(0.01f));
-    Objects.at("Model")->draw(shaders.at("shader").get());
-    
-    
+    shaders.at("model")->use();
+    shaders.at("model")->setVec3("viewPos", camera->Position);
 
+    shaders.at("model")->setMat4("projection", projection);
+    shaders.at("model")->setMat4("view", view);
+
+    // SPONZA
+    Objects.at("Model1")->model = glm::mat4(1.0f);
+    Objects.at("Model1")->model = glm::translate(Objects.at("Model1")->model, glm::vec3(0.0f, 0.0f, .175f)); // translate it down so it's at the center of the scene
+    Objects.at("Model1")->model = glm::scale(Objects.at("Model1")->model, glm::vec3(0.005f));
+
+    // light
+    lightingSystem->setupLighting(*(shaders.at("model").get()));
+
+    Objects.at("Model1")->draw(shaders.at("model").get());
+
+    // ANIModel
+    shaders.at("model")->use();
+    shaders.at("model")->setVec3("viewPos", camera->Position);
+    shaders.at("model")->setMat4("projection", projection);
+    shaders.at("model")->setMat4("view", view);
+
+    Objects.at("Model2")->model = glm::mat4(1.0f);
+    Objects.at("Model2")->model = glm::rotate(Objects.at("Model2")->model, glm::radians(90.0f), glm::vec3(0.f, 1.f, 0.f));
+    Objects.at("Model2")->model = glm::scale(Objects.at("Model2")->model, glm::vec3(0.7f));
+
+    auto transforms = animator->GetFinalBoneMatrices();
+
+    for (int i = 0; i < transforms.size(); ++i)
+    {
+        shaders.at("model")->setMat4("finalBonesMatrices[" + std::to_string(i) + "]", Objects.at("Model2")->model * transforms[i]);
+    }
+
+    // light
+    lightingSystem->setupLighting(*(shaders.at("model").get()));
+
+    Objects.at("Model2")->draw(shaders.at("model").get());
+
+    shaders.at("lighting")->use();
+    shaders.at("lighting")->setMat4("projection", projection);
+    shaders.at("lighting")->setMat4("view", view);
+
+    lightingSystem->draw(shaders.at("lighting").get());
+    
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f); 
